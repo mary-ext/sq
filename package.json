@@ -1,0 +1,38 @@
+{
+	"type": "module",
+	"name": "@intrnl/sq",
+	"description": "Lightweight asynchronous state and data fetching solution for Solid.js",
+	"version": "0.1.0",
+	"author": "intrnl",
+	"license": "MIT",
+	"repository": {
+		"url": "https://codeberg.org/intrnl/sq"
+	},
+	"packageManager": "pnpm@8.6.5",
+	"files": [
+		"dist",
+		"types",
+		"!types/tsconfig.tsbuildinfo"
+	],
+	"main": "./dist/sq.js",
+	"types": "./types/index.d.ts",
+	"scripts": {
+		"dev": "vite",
+		"build": "rm -r types/; vite build && tsc",
+		"prepublishOnly": "pnpm run build",
+		"fmt": "prettier --cache --write ."
+	},
+	"peerDependencies": {
+		"solid-js": "^1.7.6"
+	},
+	"dependencies": {
+		"@solid-primitives/event-listener": "^2.2.13"
+	},
+	"devDependencies": {
+		"prettier": "^2.8.8",
+		"solid-js": "^1.7.6",
+		"typescript": "^5.1.3",
+		"vite": "4.3.9",
+		"vite-plugin-solid": "^2.7.0"
+	}
+}
