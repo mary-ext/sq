@@ -3,9 +3,9 @@
 Lightweight asynchronous state management and data fetching solution for Solid.js
 
 - Works similarly to Solid.js' createResource
-- Fits right in the middle of `createResource` and `@tanstack/solid-query`
+- Fits right in between `createResource` and `@tanstack/solid-query`
 - Allows directly handling previous query data within the query function (useful for infinite pagination)
--
+- Does not mix up query data when switching between query keys
 
 ### Infinite query example
 
