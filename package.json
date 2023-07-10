@@ -2,7 +2,7 @@
 	"type": "module",
 	"name": "@intrnl/sq",
 	"description": "Lightweight asynchronous state and data fetching solution for Solid.js",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "intrnl",
 	"license": "MIT",
 	"repository": {
