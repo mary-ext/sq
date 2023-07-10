@@ -20,7 +20,8 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"verbatimModuleSyntax": true,
-		"stripInternal": true
+		"stripInternal": true,
+		"useDefineForClassFields": false
 	},
 	"include": ["src", "lib"],
 	"references": [{ "path": "./tsconfig.node.json" }]

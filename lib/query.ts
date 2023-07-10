@@ -32,7 +32,7 @@ export class QueryResult<Data> {
 	/** @internal */
 	public _timeout?: any;
 
-	constructor(public value?: Data, public updatedAt = -1) {
+	constructor(public key: QueryKey, public value?: Data, public updatedAt = -1) {
 		this._promise = ref(value !== undefined ? Promise.resolve(value) : new Promise(noop));
 	}
 }
@@ -163,9 +163,9 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 			const result = initialData?.(key);
 
 			if (result) {
-				query = new QueryResult(result.data, result.updatedAt);
+				query = new QueryResult(key, result.data, result.updatedAt);
 			} else {
-				query = new QueryResult<Data>();
+				query = new QueryResult<Data>(key);
 			}
 
 			cache!.set(hash, query);
@@ -306,4 +306,63 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 			mutate: (data) => instance()._mutate(data),
 		},
 	];
+};
+
+export const useQueryMutation = () => {
+	const context = useContext(QueryContext)!;
+	const cache = context.cache!;
+
+	const mutateQuery = (query: QueryResult<any>, invalidate: boolean, data: any | ((prev: any) => any)) => {
+		const prev = query.value;
+		const next = typeof data === 'function' ? data(prev) : data;
+
+		query!._promise._value = next !== undefined ? Promise.resolve(next) : new Promise(noop);
+		query!._refetchParam._value = undefined;
+
+		query!._fetch++;
+		query!._fresh = false;
+		query!._loading = false;
+		query!._fresh = invalidate;
+
+		query!.value = next;
+		query!.updatedAt = Date.now();
+	};
+
+	const mutate = (
+		invalidate: boolean,
+		key: QueryKey | ((key: QueryKey) => boolean),
+		data: any | ((prev: any) => any),
+	) => {
+		return batch(() => {
+			if (typeof key === 'function') {
+				for (const query of cache.values()) {
+					if (!key(query.key)) {
+						continue;
+					}
+
+					mutateQuery(query, invalidate, data);
+				}
+			} else {
+				const len = key.length;
+
+				loop: for (const query of cache.values()) {
+					const qKey = query.key;
+
+					if (qKey.length < len) {
+						continue loop;
+					}
+
+					for (let idx = 0; idx < len; idx++) {
+						if (qKey[idx] !== key[idx]) {
+							continue loop;
+						}
+					}
+
+					mutateQuery(query, invalidate, data);
+				}
+			}
+		});
+	};
+
+	return mutate;
 };
