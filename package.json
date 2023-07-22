@@ -8,7 +8,6 @@
 	"repository": {
 		"url": "https://codeberg.org/intrnl/sq"
 	},
-	"packageManager": "pnpm@8.6.5",
 	"files": [
 		"dist",
 		"types",
@@ -29,10 +28,10 @@
 		"@solid-primitives/event-listener": "^2.2.13"
 	},
 	"devDependencies": {
-		"prettier": "^2.8.8",
-		"solid-js": "^1.7.7",
+		"prettier": "^3.0.0",
+		"solid-js": "^1.7.8",
 		"typescript": "^5.1.6",
-		"vite": "4.3.9",
+		"vite": "4.4.6",
 		"vite-plugin-solid": "^2.7.0"
 	}
 }
