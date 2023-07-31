@@ -6,6 +6,7 @@ Lightweight asynchronous state management and data fetching solution for Solid.j
 - Fits right in between `createResource` and `@tanstack/solid-query`
 - Allows directly handling previous query data within the query function (useful for infinite pagination)
 - Does not mix up query data when switching between query keys
+- Configurable throw on access
 
 ### Infinite query example
 
