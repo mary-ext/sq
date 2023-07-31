@@ -32,7 +32,11 @@ export class QueryResult<Data> {
 	/** @internal */
 	public _timeout?: any;
 
-	constructor(public key: QueryKey, public value?: Data, public updatedAt = -1) {
+	constructor(
+		public key: QueryKey,
+		public value?: Data,
+		public updatedAt = -1,
+	) {
 		this._promise = ref(value !== undefined ? Promise.resolve(value) : new Promise(noop));
 	}
 }
@@ -59,6 +63,7 @@ export interface QueryContextOptions<Data = unknown, Key extends QueryKey = Quer
 	refetchOnWindowFocus?: boolean;
 	refetchOnReconnect?: boolean;
 	refetchInterval?: number;
+	throwOnAccess?: boolean;
 }
 
 export interface InitialDataReturn<Data> {
@@ -100,6 +105,7 @@ export const defaultQueryOptions: QueryContextOptions = {
 	refetchOnMount: true,
 	refetchOnWindowFocus: true,
 	refetchOnReconnect: true,
+	throwOnAccess: false,
 };
 
 export const QueryContext = createContext(defaultQueryOptions);
@@ -124,6 +130,8 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 		refetchOnWindowFocus,
 		refetchOnReconnect,
 		refetchInterval,
+
+		throwOnAccess,
 	} = resolvedOptions;
 
 	const isEnabled = typeof enabled === 'function' ? createMemo(enabled) : () => enabled;
@@ -278,7 +286,8 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 	});
 
 	const read = () => {
-		return instance()._resource();
+		const resource = instance()._resource;
+		return throwOnAccess || !resource.error ? resource() : undefined;
 	};
 
 	Object.defineProperties(read, {
@@ -292,7 +301,10 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 			get: () => instance()._resource.loading,
 		},
 		latest: {
-			get: () => instance()._resource.latest,
+			get: () => {
+				const resource = instance()._resource;
+				return throwOnAccess || !resource.error ? resource.latest : undefined;
+			},
 		},
 		refetchParam: {
 			get: () => instance()._refetchParam(),
