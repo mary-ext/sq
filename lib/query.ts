@@ -55,7 +55,7 @@ export type QueryDataReplacer<Data> = (prev: Data | undefined, next: Data) => Da
 
 export interface QueryContextOptions<Data = unknown, Key extends QueryKey = QueryKey, Info = unknown> {
 	fetch?: QueryFn<Data, Key, Info>;
-	cache?: Map<string, QueryResult<Data>>;
+	cache?: Map<string, QueryResult<any>>;
 	staleTime?: number;
 	cacheTime?: number;
 	replaceData?: QueryDataReplacer<Data>;
