@@ -25,13 +25,13 @@
 		"solid-js": "^1.7.6"
 	},
 	"dependencies": {
-		"@solid-primitives/event-listener": "^2.2.13"
+		"@solid-primitives/event-listener": "^2.2.14"
 	},
 	"devDependencies": {
-		"prettier": "^3.0.0",
-		"solid-js": "^1.7.8",
+		"prettier": "^3.0.2",
+		"solid-js": "^1.7.11",
 		"typescript": "^5.1.6",
-		"vite": "4.4.6",
+		"vite": "4.4.9",
 		"vite-plugin-solid": "^2.7.0"
 	}
 }
