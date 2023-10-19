@@ -46,6 +46,8 @@ export interface QueryInfo<Data, Param = unknown> {
 	param: Param | undefined;
 }
 
+export type QueryKeyFn<Key extends QueryKey = QueryKey> = () => Key | false | undefined | null
+
 export type QueryFn<Data, Key extends QueryKey = QueryKey, Param = unknown> = (
 	key: Key,
 	info: QueryInfo<Data, Param>,
@@ -75,10 +77,8 @@ export type InitialDataFn<Data, Key extends QueryKey> = (key: Key) => InitialDat
 
 export interface QueryOptions<Data = unknown, Key extends QueryKey = QueryKey, Param = unknown>
 	extends QueryContextOptions<Data, Key, Param> {
-	key: () => Key;
-
+	key: QueryKeyFn<Key>;
 	initialData?: InitialDataFn<Data, Key>;
-	enabled?: boolean | (() => boolean);
 }
 
 export interface QueryActions<Data, Param> {
@@ -121,7 +121,6 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 
 		cache,
 		initialData,
-		enabled = true,
 
 		staleTime,
 		cacheTime,
@@ -134,12 +133,11 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 		throwOnAccess,
 	} = resolvedOptions;
 
-	const isEnabled = typeof enabled === 'function' ? createMemo(enabled) : () => enabled;
 
 	const source = createMemo(
 		() => {
-			if (isEnabled()) {
-				const $key = key();
+			const $key = key();
+			if ($key) {
 				return { _key: $key, _hash: hashQueryKey($key) };
 			}
 		},
