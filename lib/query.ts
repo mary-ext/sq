@@ -46,7 +46,7 @@ export interface QueryInfo<Data, Param = unknown> {
 	param: Param | undefined;
 }
 
-export type QueryKeyFn<Key extends QueryKey = QueryKey> = () => Key | false | undefined | null
+export type QueryKeyFn<Key extends QueryKey = QueryKey> = () => Key | false | undefined | null;
 
 export type QueryFn<Data, Key extends QueryKey = QueryKey, Param = unknown> = (
 	key: Key,
@@ -132,7 +132,6 @@ export const createQuery = <Data, Key extends QueryKey, Param = unknown>(
 
 		throwOnAccess,
 	} = resolvedOptions;
-
 
 	const source = createMemo(
 		() => {
